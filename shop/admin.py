@@ -1,8 +1,17 @@
 from django.contrib import admin
-from shop.models import Category, Item, Tag
+from shop.models import Category, Item, Tag, Image
 
-
+from django.contrib.contenttypes.admin import GenericStackedInline
 # Register your models here.
+
+class CategoryInline(GenericStackedInline):
+    model = Image
+    extra = 1
+
+class ItemInline(GenericStackedInline):
+    model = Image
+    extra = 1
+
 class CategoryItemInline(admin.TabularInline):
     model = Item
     extra = 1
@@ -11,7 +20,7 @@ class CategotyAdmin(admin.ModelAdmin):
     list_display = ['name', 'description']
     search_fields = ['name']
     ordering = ['name']
-    inlines = [CategoryItemInline]
+    inlines = [CategoryItemInline, CategoryInline]
 
 
 class ItemTagInline(admin.StackedInline):
@@ -22,7 +31,7 @@ class ItemAdmin(admin.ModelAdmin):
     list_display = ['name', 'category', 'price', 'description']
     search_fields = ['name', 'description']
     ordering = ['-price']
-    inlines = [ItemTagInline]
+    inlines = [ItemTagInline, ItemInline]
     
 
 class TagAdmin(admin.ModelAdmin):
